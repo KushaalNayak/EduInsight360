@@ -1,5 +1,142 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-:root { --primary: #3366FF; }
+@theme {
+    --color-primary: #3366FF;
+    --color-primary-hover: #2952CC;
+    --color-secondary: #64748B;
 
-@layer base { body { @apply bg-[#F4F7FB] text-[#1E293B]; } }
+    --color-success: #00E096;
+    --color-error: #FF3B3B;
+    --color-warning: #FFAD0D;
+
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --shadow-premium: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 20px 50px -12px rgba(0, 0, 0, 0.1);
+}
+
+@layer base {
+    body {
+        @apply bg-[#F4F7FB] text-[#1E293B] antialiased overflow-x-hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        @apply font-bold tracking-tight text-[#0F172A];
+    }
+}
+
+@layer components {
+    /* Premium Design System Components */
+
+    .glass-sidebar {
+        @apply bg-white/90 backdrop-blur-xl border-r border-slate-200/60;
+    }
+
+    .glass-navbar {
+        @apply bg-white/80 backdrop-blur-md border-b border-slate-200/50 sticky top-0 z-40;
+    }
+
+    .card {
+        @apply bg-white rounded-2xl p-6 border border-slate-200/60 shadow-premium transition-all duration-300 hover:shadow-hover;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-5 py-2.5 bg-[#3366FF] text-white rounded-xl font-semibold text-sm transition-all hover:bg-[#2952CC] hover:shadow-lg hover:shadow-blue-500/25 active:scale-[0.98] cursor-pointer shadow-sm;
+    }
+
+    .input-label {
+        @apply block text-sm font-semibold text-slate-600 mb-2;
+    }
+
+    .input-field {
+        @apply w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 transition-all focus:outline-none focus:border-[#3366FF] focus:bg-white focus:ring-4 focus:ring-blue-500/5 placeholder:text-slate-400;
+    }
+
+    /* Auth Layout - Split Screen */
+    .auth-container {
+        @apply min-h-screen flex bg-black overflow-hidden;
+    }
+
+    .auth-left {
+        @apply hidden lg:flex flex-1 relative flex-col items-center justify-center p-12 overflow-hidden bg-[#000];
+        background-image:
+            linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 1) 100%),
+            linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%),
+            url('./assets/login-illustration.png');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .auth-left-content {
+        @apply relative z-10 max-w-[500px] text-center;
+    }
+
+    .auth-left-image {
+        @apply mt-12 transform hover:scale-105 transition-transform duration-700 ease-out;
+    }
+
+    .auth-right {
+        @apply flex-1 flex items-center justify-center p-6 lg:p-12 bg-black;
+    }
+
+    .auth-card {
+        @apply w-full max-w-[400px] flex flex-col gap-6;
+    }
+
+    .auth-form-container {
+        @apply w-full bg-[#121212] border border-white/10 rounded-xl p-8 lg:p-10 shadow-2xl;
+    }
+
+    /* Dark Mode Inputs */
+    .input-field-dark {
+        @apply w-full px-4 py-3 bg-[#1a1a1a] border border-white/10 rounded-lg text-sm text-white transition-all focus:outline-none focus:border-white/30 focus:bg-[#222] placeholder:text-slate-500;
+    }
+
+    .input-label-dark {
+        @apply block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2;
+    }
+
+    .role-selector-dark {
+        @apply flex bg-[#1a1a1a] p-1 rounded-xl mb-8 border border-white/5;
+    }
+
+    .role-btn-dark {
+        @apply flex-1 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-500 transition-all;
+    }
+
+    .role-btn-dark.active {
+        @apply bg-[#333] text-white shadow-xl;
+    }
+
+    .btn-login {
+        @apply w-full py-3.5 bg-[#0095F6] hover:bg-[#1877F2] text-white rounded-xl font-bold text-sm transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .role-selector {
+        @apply flex bg-slate-100 p-1.5 rounded-2xl mb-8;
+    }
+
+    .role-btn {
+        @apply flex-1 py-3 rounded-xl text-xs font-bold text-slate-500 transition-all;
+    }
+
+    .role-btn.active {
+        @apply bg-white text-[#3366FF] shadow-md shadow-slate-200/50;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #E2E8F0;
+        border-radius: 10px;
+    }
+}
