@@ -69,47 +69,45 @@ const TeacherDashboard = ({ showToast, user }) => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 <div className="lg:col-span-2">
                     <ChartCard title="STUDENT SUCCESS RATE" subtitle="Grades from all semesters">
-                        <div className="h-[400px] w-full mt-10">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={performanceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                    <defs>
-                                        <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#3366FF" stopOpacity={0.2} />
-                                            <stop offset="95%" stopColor="#3366FF" stopOpacity={0} />
-                                        </linearGradient>
-                                    </defs>
-                                    <CartesianGrid strokeDasharray="6 6" vertical={false} stroke="#E2E8F0" />
-                                    <XAxis
-                                        dataKey="month"
-                                        axisLine={false}
-                                        tickLine={false}
-                                        tick={{ fill: '#64748B', fontSize: 13, fontWeight: 800 }}
-                                    />
-                                    <YAxis
-                                        axisLine={false}
-                                        tickLine={false}
-                                        tick={{ fill: '#64748B', fontSize: 13, fontWeight: 800 }}
-                                        domain={[0, 10]}
-                                    />
-                                    <Tooltip
-                                        contentStyle={{
-                                            borderRadius: '24px',
-                                            border: 'none',
-                                            boxShadow: '0 25px 60px rgba(0,0,0,0.15)',
-                                            padding: '16px 24px'
-                                        }}
-                                    />
-                                    <Area
-                                        type="monotone"
-                                        dataKey="score"
-                                        stroke="#3366FF"
-                                        fillOpacity={1}
-                                        fill="url(#colorScore)"
-                                        strokeWidth={5}
-                                    />
-                                </AreaChart>
-                            </ResponsiveContainer>
-                        </div>
+                        <ResponsiveContainer width="100%" height={350}>
+                            <AreaChart data={performanceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                <defs>
+                                    <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#3366FF" stopOpacity={0.2} />
+                                        <stop offset="95%" stopColor="#3366FF" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="6 6" vertical={false} stroke="#E2E8F0" />
+                                <XAxis
+                                    dataKey="month"
+                                    axisLine={false}
+                                    tickLine={false}
+                                    tick={{ fill: '#64748B', fontSize: 13, fontWeight: 800 }}
+                                />
+                                <YAxis
+                                    axisLine={false}
+                                    tickLine={false}
+                                    tick={{ fill: '#64748B', fontSize: 13, fontWeight: 800 }}
+                                    domain={[0, 10]}
+                                />
+                                <Tooltip
+                                    contentStyle={{
+                                        borderRadius: '24px',
+                                        border: 'none',
+                                        boxShadow: '0 25px 60px rgba(0,0,0,0.15)',
+                                        padding: '16px 24px'
+                                    }}
+                                />
+                                <Area
+                                    type="monotone"
+                                    dataKey="score"
+                                    stroke="#3366FF"
+                                    fillOpacity={1}
+                                    fill="url(#colorScore)"
+                                    strokeWidth={5}
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
                     </ChartCard>
                 </div>
 
@@ -142,24 +140,22 @@ const TeacherDashboard = ({ showToast, user }) => {
                             <h3 className="text-sm font-black text-slate-900 tracking-widest uppercase">Grade Spread</h3>
                             <LayoutDashboard size={18} className="text-[#3366FF]" />
                         </div>
-                        <div className="h-[200px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={distributionData}>
-                                    <Bar dataKey="count" radius={[10, 10, 10, 10]} barSize={35}>
-                                        {distributionData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={entry.color} />
-                                        ))}
-                                    </Bar>
-                                    <XAxis
-                                        dataKey="grade"
-                                        axisLine={false}
-                                        tickLine={false}
-                                        tick={{ fill: '#94A3B8', fontSize: 13, fontWeight: 900 }}
-                                    />
-                                    <Tooltip cursor={{ fill: '#F8FAFC' }} contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }} />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
+                        <ResponsiveContainer width="100%" height={180}>
+                            <BarChart data={distributionData}>
+                                <Bar dataKey="count" radius={[10, 10, 10, 10]} barSize={35}>
+                                    {distributionData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.color} />
+                                    ))}
+                                </Bar>
+                                <XAxis
+                                    dataKey="grade"
+                                    axisLine={false}
+                                    tickLine={false}
+                                    tick={{ fill: '#94A3B8', fontSize: 13, fontWeight: 900 }}
+                                />
+                                <Tooltip cursor={{ fill: '#F8FAFC' }} contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }} />
+                            </BarChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
             </div>

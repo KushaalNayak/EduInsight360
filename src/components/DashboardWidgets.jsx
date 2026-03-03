@@ -28,12 +28,12 @@ export const StatCard = ({ title, value, icon: Icon, trend, color = '#3366FF' })
 };
 
 export const ChartCard = ({ title, subtitle, children }) => (
-    <div className="card h-full flex flex-col">
+    <div className="card min-h-[400px] flex flex-col">
         <div className="mb-4">
             <h3 className="text-sm font-black text-slate-900 tracking-widest uppercase">{title}</h3>
             {subtitle && <p className="text-xs font-semibold text-slate-400 mt-1 uppercase opacity-70">{subtitle}</p>}
         </div>
-        <div className="flex-1 w-full min-h-[300px]">
+        <div className="flex-1 w-full relative min-h-0">
             {children}
         </div>
     </div>
