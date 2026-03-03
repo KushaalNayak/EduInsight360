@@ -36,6 +36,40 @@ export const mockStudents = [
         ]
     },
     {
+        id: '2400033108',
+        name: 'Kushaal Nayak',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kushaal',
+        email: '2400033108@kluniversity.in',
+        grade: 'B Tech - 2nd year',
+        overallScore: 9.14,
+        attendance: 88,
+        subjects: [
+            { name: 'Designs and Analysis of Algorithms', score: 90, trend: 'up', teacher: 'Dr. Smith' },
+            { name: 'Data Structures', score: 88, trend: 'stable', teacher: 'Prof. Miller' },
+            { name: 'Computer Networks', score: 85, trend: 'up', teacher: 'Dr. Brown' },
+            { name: 'Operating Systems', score: 92, trend: 'up', teacher: 'Ms. Davis' },
+            { name: 'Database Management Systems', score: 89, trend: 'stable', teacher: 'Mr. Wilson' },
+        ],
+        recentActivity: [
+            { task: 'Web Development Project', date: '2026-02-25', score: 95 },
+            { task: 'Technical Presentation', date: '2026-02-18', score: 92 },
+        ],
+        improvementTrends: [
+            { month: 'Sep', score: 8.5 },
+            { month: 'Oct', score: 8.7 },
+            { month: 'Nov', score: 8.8 },
+            { month: 'Dec', score: 8.9 },
+            { month: 'Jan', score: 9.0 },
+            { month: 'Feb', score: 9.14 },
+        ],
+        strengths: ['Web Development', 'Problem Solving', 'Public Speaking'],
+        weaknesses: ['Academic Documentation'],
+        recommendations: [
+            'Continue focusing on full-stack development projects.',
+            'Maintain high academic performance.'
+        ]
+    },
+    {
         id: '2400080210',
         name: 'Sudheer Bhuvana',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sudheer',
@@ -142,16 +176,16 @@ export const mockStudents = [
 ];
 
 export const classStats = {
-    averageScore: 7.98,
+    averageScore: 8.22,
     topPerformer: 'Sudheer Bhuvana',
-    attendanceRate: 80.0,
-    passingRate: 75.0,
+    attendanceRate: 81.6,
+    passingRate: 80.0,
     subjectAverages: [
-        { subject: 'DAA', average: 7.5 },
-        { subject: 'DS', average: 7.0 },
-        { subject: 'CN', average: 7.2 },
-        { subject: 'OS', average: 8.2 },
-        { subject: 'DBMS', average: 7.6 },
+        { subject: 'DAA', average: 7.7 },
+        { subject: 'DS', average: 7.4 },
+        { subject: 'CN', average: 7.5 },
+        { subject: 'OS', average: 8.4 },
+        { subject: 'DBMS', average: 7.8 },
     ],
     genderDistribution: [
         { name: 'Male', value: 100 },
