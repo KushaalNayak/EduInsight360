@@ -5,15 +5,14 @@ import { mockStudents } from '../data/mockData';
 
 const Login = ({ onLogin, onOpenPublic, showToast }) => {
     const [role, setRole] = useState('student');
-    const [userId, setUserId] = useState(role === 'student' ? '2400030188' : 'kushaal');
-    const [password, setPassword] = useState('password123');
+    const [userId, setUserId] = useState('');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [isRecovering, setIsRecovering] = useState(false);
     const [recoveryStep, setRecoveryStep] = useState('email');
     const [recoveryEmail, setRecoveryEmail] = useState('');
     const [recoveryCode, setRecoveryCode] = useState('');
-
 
     const handleSupportAction = (type) => {
         if (type === 'identity') {
@@ -33,7 +32,7 @@ const Login = ({ onLogin, onOpenPublic, showToast }) => {
                 showToast?.('We sent a code to your email.', 'success');
             } else {
                 setIsRecovering(false);
-                setUserId('2400030188'); // Mock recovery
+                setUserId('2400033108'); // Updated to reflect your ID
                 showToast?.('Your ID has been recovered!', 'success');
             }
             setLoading(false);
@@ -52,7 +51,7 @@ const Login = ({ onLogin, onOpenPublic, showToast }) => {
                         onLogin('teacher', {
                             name: 'R B KUSHAAL NAYAK',
                             role: 'Lead Faculty / Lead Staff',
-                            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=Kushal`,
+                            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&accessories=prescription01`,
                             id: 'FAC-2026-001',
                             email: 'kushaal@kluniversity.in'
                         });
@@ -133,7 +132,7 @@ const Login = ({ onLogin, onOpenPublic, showToast }) => {
                                     <button
                                         onClick={() => {
                                             setRole('student');
-                                            setUserId('2400030188');
+                                            setUserId('');
                                         }}
                                         className={`role-btn flex items-center justify-center gap-2 py-3.5 ${role === 'student' ? 'active bg-white text-[#3366FF] shadow-sm' : 'text-slate-500'}`}
                                     >
@@ -143,7 +142,7 @@ const Login = ({ onLogin, onOpenPublic, showToast }) => {
                                     <button
                                         onClick={() => {
                                             setRole('teacher');
-                                            setUserId('kushaal');
+                                            setUserId('');
                                         }}
                                         className={`role-btn flex items-center justify-center gap-2 py-3.5 ${role === 'teacher' ? 'active bg-white text-[#3366FF] shadow-sm' : 'text-slate-500'}`}
                                     >
@@ -286,7 +285,7 @@ const Login = ({ onLogin, onOpenPublic, showToast }) => {
                     <div className="bg-[#F8FAFC] border border-slate-200/60 rounded-2xl p-6 text-center shadow-sm">
                         <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest flex items-center justify-center gap-2">
                             <HelpCircle size={14} className="text-[#3366FF]" />
-                            Having trouble? <button onClick={() => handleSupportAction('support')} className="text-[#3366FF] font-black hover:underline">Contact Support</button>
+                            Having trouble? <button onClick={() => handleSupportAction('support')} className="text-[#3366FF] font-black hover:underline" type="button">Contact Support</button>
                         </p>
                     </div>
                 </motion.div>
@@ -314,3 +313,4 @@ const Login = ({ onLogin, onOpenPublic, showToast }) => {
 };
 
 export default Login;
+

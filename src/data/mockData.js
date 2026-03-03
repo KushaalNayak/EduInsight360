@@ -38,7 +38,7 @@ export const mockStudents = [
     {
         id: '2400033108',
         name: 'Kushaal Nayak',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kushaal',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&accessories=prescription01',
         email: '2400033108@kluniversity.in',
         grade: 'B Tech - 2nd year',
         overallScore: 9.14,
