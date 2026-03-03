@@ -80,25 +80,23 @@ const Reports = ({ role, showToast }) => {
                     {/* Analytics Section */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                         <ChartCard title="SUBJECT PERFORMANCE AVERAGE" subtitle="Current semester scoring across core modules">
-                            <div className="h-[350px] w-full mt-8">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={classStats.subjectAverages}>
-                                        <CartesianGrid strokeDasharray="6 6" vertical={false} stroke="#E2E8F0" />
-                                        <XAxis dataKey="subject" axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 13, fontWeight: 800 }} />
-                                        <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 13, fontWeight: 800 }} domain={[0, 10]} />
-                                        <Tooltip contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }} />
-                                        <Bar dataKey="average" radius={[8, 8, 0, 0]} barSize={40}>
-                                            {classStats.subjectAverages.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#3366FF' : '#00E096'} />
-                                            ))}
-                                        </Bar>
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </div>
+                            <ResponsiveContainer width="100%" height={350}>
+                                <BarChart data={classStats.subjectAverages}>
+                                    <CartesianGrid strokeDasharray="6 6" vertical={false} stroke="#E2E8F0" />
+                                    <XAxis dataKey="subject" axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 13, fontWeight: 800 }} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 13, fontWeight: 800 }} domain={[0, 10]} />
+                                    <Tooltip contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }} />
+                                    <Bar dataKey="average" radius={[8, 8, 0, 0]} barSize={40}>
+                                        {classStats.subjectAverages.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#3366FF' : '#00E096'} />
+                                        ))}
+                                    </Bar>
+                                </BarChart>
+                            </ResponsiveContainer>
                         </ChartCard>
 
                         <ChartCard title="GENDER COMPOSITION" subtitle="Student demographic distribution">
-                            <div className="h-[350px] w-full mt-8 flex items-center justify-center">
+                            <div className="relative h-[350px] w-full flex items-center justify-center">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
                                         <Pie
