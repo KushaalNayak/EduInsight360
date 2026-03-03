@@ -96,8 +96,8 @@ const Reports = ({ role, showToast }) => {
                         </ChartCard>
 
                         <ChartCard title="GENDER COMPOSITION" subtitle="Student demographic distribution">
-                            <div className="relative h-[350px] w-full flex items-center justify-center">
-                                <ResponsiveContainer width="100%" height="100%">
+                            <div className="relative w-full h-[350px] flex items-center justify-center">
+                                <ResponsiveContainer width="100%" height={350}>
                                     <PieChart>
                                         <Pie
                                             data={classStats.genderDistribution}
@@ -105,6 +105,8 @@ const Reports = ({ role, showToast }) => {
                                             outerRadius={120}
                                             paddingAngle={8}
                                             dataKey="value"
+                                            cx="50%"
+                                            cy="50%"
                                         >
                                             <Cell fill="#3366FF" />
                                             <Cell fill="#F4F7FB" />
@@ -112,9 +114,9 @@ const Reports = ({ role, showToast }) => {
                                         <Tooltip contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }} />
                                     </PieChart>
                                 </ResponsiveContainer>
-                                <div className="absolute flex flex-col items-center">
-                                    <span className="text-3xl font-black text-slate-900">100%</span>
-                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Male Hub</span>
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-none">
+                                    <span className="text-3xl font-black text-slate-900 leading-none">100%</span>
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Male Hub</span>
                                 </div>
                             </div>
                         </ChartCard>
