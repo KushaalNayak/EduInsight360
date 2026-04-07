@@ -12,6 +12,7 @@ import Guidelines from './views/Guidelines';
 import Privacy from './views/Privacy';
 import { AnimatePresence, motion } from 'framer-motion';
 import { mockStudents as initialStudents } from './data/mockData';
+import { studentService } from './services/api';
 import { X, CheckCircle, Info, AlertTriangle } from 'lucide-react';
 
 const Toast = ({ text, type, onClose }) => {
@@ -58,6 +59,21 @@ const App = () => {
     const [students, setStudents] = useState(initialStudents);
     const [toasts, setToasts] = useState([]);
     const [publicTab, setPublicTab] = useState(null);
+
+    // Fetch students from backend
+    useEffect(() => {
+        const fetchStudents = async () => {
+            try {
+                const data = await studentService.getAll();
+                if (data && data.length > 0) {
+                    setStudents(data);
+                }
+            } catch (error) {
+                console.warn('Could not fetch from backend, using mock data:', error);
+            }
+        };
+        fetchStudents();
+    }, []);
 
     const showToast = useCallback((text, type = 'success') => {
         const id = Date.now();
@@ -111,9 +127,17 @@ const App = () => {
         setActiveTab('settings');
     };
 
-    const handleAddStudent = (student) => {
-        setStudents(prev => [student, ...prev]);
-        showToast(`Student ${student.name} enrolled successfully`, 'success');
+    const handleAddStudent = async (student) => {
+        try {
+            const savedStudent = await studentService.create(student);
+            setStudents(prev => [savedStudent, ...prev]);
+            showToast(`Student ${student.name} enrolled successfully`, 'success');
+        } catch (error) {
+            console.error('Error adding student:', error);
+            // Fallback to local state if backend is down but maybe show a warning
+            setStudents(prev => [student, ...prev]);
+            showToast(`Student enrolled locally (Backend offline)`, 'info');
+        }
     };
 
     // Early return while checking session
@@ -201,7 +225,7 @@ const App = () => {
                             >
                                 {/* Dashboard View (Overview) */}
                                 {activeTab === 'dashboard' && (
-                                    role === 'teacher' ? <TeacherDashboard showToast={showToast} user={sessionUser} /> : <StudentDashboard showToast={showToast} student={sessionUser} />
+                                    role === 'teacher' ? <TeacherDashboard showToast={showToast} user={sessionUser} students={students} /> : <StudentDashboard showToast={showToast} student={sessionUser} />
                                 )}
 
                                 {/* Students Directory (Teacher Only) */}
