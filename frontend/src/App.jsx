@@ -225,7 +225,7 @@ const App = () => {
                             >
                                 {/* Dashboard View (Overview) */}
                                 {activeTab === 'dashboard' && (
-                                    role === 'teacher' ? <TeacherDashboard showToast={showToast} user={sessionUser} students={students} /> : <StudentDashboard showToast={showToast} student={sessionUser} />
+                                    role === 'teacher' ? <TeacherDashboard showToast={showToast} user={sessionUser} students={students} setActiveTab={setActiveTab} /> : <StudentDashboard showToast={showToast} student={sessionUser} />
                                 )}
 
                                 {/* Students Directory (Teacher Only) */}

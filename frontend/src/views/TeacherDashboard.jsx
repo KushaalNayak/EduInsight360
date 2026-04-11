@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 
-const TeacherDashboard = ({ showToast, user, students = [] }) => {
+const TeacherDashboard = ({ showToast, user, students = [], setActiveTab }) => {
     const [searchQuery, setSearchQuery] = useState('');
 
     // Dynamic Metrics
@@ -42,7 +42,15 @@ const TeacherDashboard = ({ showToast, user, students = [] }) => {
     ];
 
     const handleQuickAction = (action) => {
-        showToast?.(`Starting: ${action}`, 'success');
+        if (action === 'Export' || action === 'Report') {
+            setActiveTab('reports');
+            showToast?.(`Navigating to ${action} hub`, 'info');
+        } else if (action === 'Enrollment') {
+            setActiveTab('students');
+            showToast?.(`Opening Student Management`, 'info');
+        } else {
+            showToast?.(`Starting: ${action}`, 'success');
+        }
     };
 
     const filteredStudents = students.filter(s => 

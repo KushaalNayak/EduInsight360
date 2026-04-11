@@ -130,31 +130,27 @@ const StudentModal = ({ student, onClose }) => {
     );
 };
 
-const StudentList = ({ showToast, students, onAddStudent }) => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedStudent, setSelectedStudent] = useState(null);
+const EnrollStudentModal = ({ onClose, onAdd }) => {
+    const [formData, setFormData] = useState({
+        name: '',
+        id: '',
+        email: '',
+        grade: 'B Tech - 2nd year',
+        attendance: '',
+        overallScore: ''
+    });
 
-    const filteredStudents = students.filter(s =>
-        s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.id.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const handleAddStudent = () => {
-        const id = `24000${Math.floor(800000 + Math.random() * 100000)}`;
-        const names = ['Jordan Smith', 'Cassidy Reed', 'Morgan Bell', 'Taylor Vance', 'Skyler Ross'];
-        const randomName = names[Math.floor(Math.random() * names.length)];
-
+    const handleSubmit = (e) => {
+        e.preventDefault();
         const newStudent = {
-            id,
-            name: randomName,
-            email: `${randomName.toLowerCase().replace(' ', '.')}@eduinsight360.com`,
-            grade: 'B Tech - 2nd year',
-            overallScore: 8.5,
-            attendance: 90,
+            ...formData,
+            attendance: Number(formData.attendance),
+            overallScore: Number(formData.overallScore),
+            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${formData.name}`,
             subjects: [
-                { name: 'Designs and Analysis of Algorithms', score: 85, trend: 'up' },
-                { name: 'Data Structures', score: 80, trend: 'stable' },
-                { name: 'Computer Networks', score: 75, trend: 'stable' },
+                { name: 'Designs and Analysis of Algorithms', score: 85, trend: 'up', teacher: 'Dr. Smith' },
+                { name: 'Data Structures', score: 80, trend: 'stable', teacher: 'Prof. Miller' },
+                { name: 'Computer Networks', score: 75, trend: 'stable', teacher: 'Dr. Brown' },
             ],
             recentActivity: [],
             improvementTrends: [],
@@ -162,8 +158,126 @@ const StudentList = ({ showToast, students, onAddStudent }) => {
             weaknesses: [],
             recommendations: ['Maintain current academic consistency.']
         };
+        onAdd(newStudent);
+        onClose();
+    };
 
-        onAddStudent(newStudent);
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md"
+            onClick={onClose}
+        >
+            <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl p-10 border border-slate-100"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="mb-10 flex items-center justify-between">
+                    <div>
+                        <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">Enroll Student</h2>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manual Database Entry</p>
+                    </div>
+                    <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-xl transition-colors text-slate-400">
+                        <X size={20} />
+                    </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                             <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Full Name</label>
+                             <input 
+                                required
+                                type="text"
+                                value={formData.name}
+                                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                placeholder="E.G. JOHN DOE"
+                                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-[11px] font-black uppercase tracking-widest focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
+                             />
+                        </div>
+                        <div className="space-y-2">
+                             <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Student ID</label>
+                             <input 
+                                required
+                                type="text"
+                                value={formData.id}
+                                onChange={(e) => setFormData({...formData, id: e.target.value})}
+                                placeholder="24000..."
+                                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-[11px] font-black uppercase tracking-widest focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
+                             />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                         <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Official Email</label>
+                         <input 
+                            required
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => setFormData({...formData, email: e.target.value})}
+                            placeholder="NAME@KLUNIVERSITY.IN"
+                            className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-[11px] font-black uppercase tracking-widest focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
+                         />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                             <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Attendance %</label>
+                             <input 
+                                required
+                                type="number"
+                                min="0"
+                                max="100"
+                                value={formData.attendance}
+                                onChange={(e) => setFormData({...formData, attendance: e.target.value})}
+                                placeholder="0-100"
+                                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-[11px] font-black uppercase tracking-widest focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
+                             />
+                        </div>
+                        <div className="space-y-2">
+                             <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Current CGPA</label>
+                             <input 
+                                required
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="10"
+                                value={formData.overallScore}
+                                onChange={(e) => setFormData({...formData, overallScore: e.target.value})}
+                                placeholder="0.00-10.00"
+                                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-[11px] font-black uppercase tracking-widest focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
+                             />
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full py-5 bg-[#3366FF] hover:bg-blue-600 text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] shadow-xl shadow-blue-500/30 transition-all active:scale-95 flex items-center justify-center gap-3 mt-4"
+                    >
+                        <Plus size={18} strokeWidth={3} /> Complete Enrollment
+                    </button>
+                </form>
+            </motion.div>
+        </motion.div>
+    );
+};
+
+const StudentList = ({ showToast, students, onAddStudent }) => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedStudent, setSelectedStudent] = useState(null);
+    const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
+
+    const filteredStudents = students.filter(s =>
+        s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.id.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const handleAddStudent = () => {
+        setIsEnrollModalOpen(true);
     };
 
     const handleDownloadRegistry = () => {
@@ -178,6 +292,12 @@ const StudentList = ({ showToast, students, onAddStudent }) => {
                     <StudentModal
                         student={selectedStudent}
                         onClose={() => setSelectedStudent(null)}
+                    />
+                )}
+                {isEnrollModalOpen && (
+                    <EnrollStudentModal 
+                        onClose={() => setIsEnrollModalOpen(false)}
+                        onAdd={(newStudent) => onAddStudent(newStudent)}
                     />
                 )}
             </AnimatePresence>

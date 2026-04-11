@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+    import React, { useState, useRef, useEffect } from 'react';
 import { Search, Bell, Mail, User, LogOut, ChevronDown, SearchCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
