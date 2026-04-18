@@ -1,6 +1,6 @@
 package com.eduinsight.backend.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,7 +11,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -23,8 +22,7 @@ import java.util.Arrays;
 public class SecurityConfig {
 
 
-    @Autowired
-    private JwtFilter jwtFilter;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,15 +39,15 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .cors(org.springframework.security.config.Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // Security removed as per user request
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
+        // jwtFilter removed for simplified access
+        
         return http.build();
     }
+
 
     @Bean
     public CorsFilter corsFilter() {

@@ -6,7 +6,6 @@ const Navbar = ({ user, onLogout, onSettings, showToast }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const dropdownRef = useRef(null);
 
-    // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {

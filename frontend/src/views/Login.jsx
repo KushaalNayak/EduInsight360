@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { UserCircle, ShieldCheck, Loader2, GraduationCap, ArrowRight, HelpCircle, Lock, BookOpen, Fingerprint } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { authService } from '../services/api';
 import { mockStudents } from '../data/mockData';
+
 
 const Login = ({ onLogin, onOpenPublic, showToast }) => {
     const [role, setRole] = useState('student');
@@ -44,34 +46,47 @@ const Login = ({ onLogin, onOpenPublic, showToast }) => {
         setLoading(true);
         setError('');
 
-        setTimeout(() => {
-            if (password === 'password123') {
+        try {
+            const data = await authService.login(userId, password);
+            if (data.token) {
+                // Determine role based on selected role in UI or from backend if available
+                // For now, the UI role selector is the source of truth for the portal view
                 if (role === 'teacher') {
-                    if (userId === 'kushaal') {
-                        onLogin('teacher', {
-                            name: 'R B KUSHAAL NAYAK',
-                            role: 'Lead Faculty / Lead Staff',
-                            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&accessories=prescription01`,
-                            id: 'FAC-2026-001',
-                            email: 'kushaal@kluniversity.in'
-                        });
-                    } else {
-                        setError('Login failed: Faculty ID not found');
-                    }
+                    onLogin('teacher', {
+                        name: userId === 'kushaal' ? 'R B KUSHAAL NAYAK' : userId,
+                        role: 'Lead Faculty / Lead Staff',
+                        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userId}`,
+                        id: userId,
+                        email: `${userId}@kluniversity.in`
+                    });
                 } else {
+                    // Try to find student in mock data or just use generic
                     const student = mockStudents.find(s => s.id === userId);
                     if (student) {
                         onLogin('student', student);
                     } else {
-                        setError('Login failed: Student ID not found');
+                        onLogin('student', {
+                            name: userId,
+                            id: userId,
+                            email: `${userId}@kluniversity.in`,
+                            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userId}`,
+                            overallScore: 0,
+                            attendance: 0,
+                            subjects: []
+                        });
                     }
                 }
-            } else {
-                setError('Login failed: Incorrect password');
+                showToast?.('Signed in successfully', 'success');
             }
+        } catch (err) {
+            console.error('Login error:', err);
+            setError(err.response?.data || 'Login failed: Service unreachable');
+            showToast?.('Authentication failed', 'error');
+        } finally {
             setLoading(false);
-        }, 800);
+        }
     };
+
 
     return (
         <div className="auth-container">

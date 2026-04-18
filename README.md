@@ -10,6 +10,19 @@ EduInsight360 is a premium web application designed for faculty and students to 
 - **Charts**: Recharts
 - **Styling**: Glassmorphism & Modern UI/UX Design
 
+## 🚀 Quick Run (Recommended)
+
+The project is fully containerized. To run both the frontend and backend with a single command:
+
+```bash
+docker-compose up --build
+```
+
+- **Frontend:** [http://localhost:5173](http://localhost:5173)
+- **Backend:** [http://localhost:8081](http://localhost:8081)
+- **Default Auth:** `kushaal` / `password123`
+
+
 ## 🛠️ Getting Started
 
 1. **Clone the repository**:

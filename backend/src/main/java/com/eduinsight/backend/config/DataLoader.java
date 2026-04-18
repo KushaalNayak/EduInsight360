@@ -15,7 +15,6 @@ public class DataLoader {
     CommandLineRunner initDatabase(StudentRepository repository) {
         return args -> {
             if (repository.count() == 0) {
-                // Student 1: Nischal Singana
                 Student s1 = new Student();
                 s1.setId("2400030188");
                 s1.setName("Nischal Singana");
@@ -47,7 +46,6 @@ public class DataLoader {
                 s1.setRecommendations(Arrays.asList("Maintain current academic consistency.", "Participate in more group discussions to improve confidence."));
                 repository.save(s1);
 
-                // Student 2: Kushaal Nayak
                 Student s2 = new Student();
                 s2.setId("2400033108");
                 s2.setName("Kushaal Nayak");

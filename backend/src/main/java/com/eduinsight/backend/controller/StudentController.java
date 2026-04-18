@@ -59,4 +59,25 @@ public class StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/export")
+    public ResponseEntity<String> exportToCSV() {
+        List<Student> students = studentService.getAllStudents();
+        StringBuilder csv = new StringBuilder();
+        csv.append("Name,ID,Email,Grade,CGPA,Attendance,Status\n");
+        for (Student s : students) {
+            csv.append(s.getName()).append(",")
+               .append(s.getId()).append(",")
+               .append(s.getEmail()).append(",")
+               .append(s.getGrade()).append(",")
+               .append(s.getOverallScore()).append(",")
+               .append(s.getAttendance()).append(",")
+               .append(s.getStatus()).append("\n");
+        }
+        return ResponseEntity.ok()
+                .header("Content-Type", "text/csv")
+                .header("Content-Disposition", "attachment; filename=students.csv")
+                .body(csv.toString());
+    }
 }
+

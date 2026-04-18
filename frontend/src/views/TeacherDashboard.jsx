@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StatCard, ChartCard } from '../components/DashboardWidgets';
+import { studentService } from '../services/api';
 import {
     Users,
     GraduationCap,
@@ -10,12 +11,53 @@ import {
     Clock,
     Search,
     ChevronRight,
-    ArrowUpRight
+    ArrowUpRight,
+    X,
+    Save
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
+
+const EditModal = ({ student, type, onClose, onSave }) => {
+    const [val, setVal] = useState(type === 'marks' ? student.overallScore : student.attendance);
+
+    return (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-white rounded-[2rem] p-10 w-full max-w-md shadow-2xl border border-slate-100">
+                <div className="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">{type === 'marks' ? 'Update CGPA' : 'Update Attendance'}</h2>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Modifying: {student.name}</p>
+                    </div>
+                    <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-xl transition-colors"><X size={20} /></button>
+                </div>
+                <div className="space-y-6">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black text-slate-900 uppercase tracking-widest ml-1">{type === 'marks' ? 'Current CGPA Index' : 'Attendance Percentage'}</label>
+                        <input 
+                            type="number" 
+                            step={type === 'marks' ? "0.01" : "1"}
+                            value={val}
+                            onChange={(e) => setVal(Number(e.target.value))}
+                            className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-lg font-black text-[#3366FF] focus:outline-none focus:border-[#3366FF]"
+                        />
+                    </div>
+                    <button 
+                        onClick={() => onSave(val)}
+                        className="w-full py-5 bg-[#3366FF] text-white rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-blue-500/20 flex items-center justify-center gap-2"
+                    >
+                        <Save size={16} /> Save Changes
+                    </button>
+                </div>
+            </motion.div>
+        </motion.div>
+    );
+};
 
 const TeacherDashboard = ({ showToast, user, students = [], setActiveTab }) => {
     const [searchQuery, setSearchQuery] = useState('');
+    const [editingStudent, setEditingStudent] = useState(null);
+    const [modalType, setModalType] = useState(null); // 'marks' or 'attendance'
 
     // Dynamic Metrics
     const totalStudents = students.length;
@@ -41,10 +83,14 @@ const TeacherDashboard = ({ showToast, user, students = [], setActiveTab }) => {
         { grade: 'B', count: students.filter(s => s.overallScore < 6).length, color: '#A5BCFF' },
     ];
 
-    const handleQuickAction = (action) => {
-        if (action === 'Export' || action === 'Report') {
+    const handleQuickAction = async (action) => {
+        if (action === 'Export') {
+            showToast?.("Preparing CSV download...", "info");
+            await studentService.exportCSV();
+            showToast?.("Export completed", "success");
+        } else if (action === 'Report') {
             setActiveTab('reports');
-            showToast?.(`Navigating to ${action} hub`, 'info');
+            showToast?.(`Navigating to report hub`, 'info');
         } else if (action === 'Enrollment') {
             setActiveTab('students');
             showToast?.(`Opening Student Management`, 'info');
@@ -53,13 +99,40 @@ const TeacherDashboard = ({ showToast, user, students = [], setActiveTab }) => {
         }
     };
 
+    const handleUpdateStudent = async (newVal) => {
+        try {
+            const updated = { ...editingStudent };
+            if (modalType === 'marks') updated.overallScore = newVal;
+            else updated.attendance = newVal;
+
+            await studentService.update(editingStudent.id, updated);
+            showToast?.(`Updated ${modalType} for ${editingStudent.name}`, 'success');
+            setEditingStudent(null);
+            // Refresh list (normally parent would refetch)
+            setTimeout(() => window.location.reload(), 1000); 
+        } catch (err) {
+            showToast?.("Update failed", "error");
+        }
+    };
+
     const filteredStudents = students.filter(s => 
         s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        s.id.includes(searchQuery)
+        s.id.toLowerCase().includes(searchQuery.toLowerCase())
     ).slice(0, 5); // Just show top 5 in dash
 
     return (
         <div className="space-y-10 animate-in fade-in duration-700">
+            <AnimatePresence>
+                {editingStudent && (
+                    <EditModal 
+                        student={editingStudent} 
+                        type={modalType} 
+                        onClose={() => setEditingStudent(null)} 
+                        onSave={handleUpdateStudent}
+                    />
+                )}
+            </AnimatePresence>
+
             {/* Page Branding Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-slate-200 pb-10">
                 <div>
@@ -138,7 +211,7 @@ const TeacherDashboard = ({ showToast, user, students = [], setActiveTab }) => {
                             <h3 className="text-white text-lg font-black mb-6 uppercase tracking-widest">Quick Tools</h3>
                             <div className="space-y-4">
                                 {[
-                                    { label: 'Export Results', action: 'Export' },
+                                    { label: 'Export Results (CSV)', action: 'Export' },
                                     { label: 'Add New Student', action: 'Enrollment' },
                                     { label: 'Make Report', action: 'Report' }
                                 ].map((item, i) => (
@@ -230,10 +303,22 @@ const TeacherDashboard = ({ showToast, user, students = [], setActiveTab }) => {
                                     <td className="py-5 font-black text-slate-900">{student.overallScore.toFixed(2)}</td>
                                     <td className="py-5 text-right">
                                         <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button onClick={() => showToast?.(`Updating attendance for ${student.name}`, 'info')} className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-[10px] font-black uppercase tracking-widest transition-colors">
+                                            <button 
+                                                onClick={() => {
+                                                    setEditingStudent(student);
+                                                    setModalType('attendance');
+                                                }} 
+                                                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-[10px] font-black uppercase tracking-widest transition-colors"
+                                            >
                                                 Attendance
                                             </button>
-                                            <button onClick={() => showToast?.(`Editing marks for ${student.name}`, 'info')} className="px-3 py-1.5 bg-blue-50 border border-blue-100 hover:bg-blue-100 text-[#3366FF] rounded-md text-[10px] font-black uppercase tracking-widest transition-colors">
+                                            <button 
+                                                onClick={() => {
+                                                    setEditingStudent(student);
+                                                    setModalType('marks');
+                                                }} 
+                                                className="px-3 py-1.5 bg-blue-50 border border-blue-100 hover:bg-blue-100 text-[#3366FF] rounded-md text-[10px] font-black uppercase tracking-widest transition-colors"
+                                            >
                                                 Edit Marks
                                             </button>
                                         </div>
@@ -249,3 +334,4 @@ const TeacherDashboard = ({ showToast, user, students = [], setActiveTab }) => {
 };
 
 export default TeacherDashboard;
+

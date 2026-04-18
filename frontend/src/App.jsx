@@ -12,8 +12,9 @@ import Guidelines from './views/Guidelines';
 import Privacy from './views/Privacy';
 import { AnimatePresence, motion } from 'framer-motion';
 import { mockStudents as initialStudents } from './data/mockData';
-import { studentService } from './services/api';
+import { studentService, authService } from './services/api';
 import { X, CheckCircle, Info, AlertTriangle } from 'lucide-react';
+
 
 const Toast = ({ text, type, onClose }) => {
     useEffect(() => {
@@ -110,12 +111,14 @@ const App = () => {
     };
 
     const handleLogout = () => {
+        authService.logout();
         setRole(null);
         setSessionUser(null);
         localStorage.removeItem('user');
         setActiveTab('dashboard');
         showToast('Successfully signed out of portal', 'info');
     };
+
 
     const handleUpdateUser = (updatedProfile) => {
         setSessionUser(prev => ({ ...prev, ...updatedProfile }));
@@ -236,8 +239,9 @@ const App = () => {
 
                                 {/* Academic Reports & Analytics View */}
                                 {activeTab === 'reports' && (
-                                    <Reports role={role} showToast={showToast} />
+                                    <Reports role={role} showToast={showToast} students={students} />
                                 )}
+
 
                                 {/* Settings View */}
                                 {activeTab === 'settings' && (

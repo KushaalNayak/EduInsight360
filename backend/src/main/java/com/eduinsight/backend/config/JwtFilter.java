@@ -33,7 +33,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             token = authorizationHeader.substring(7);
-            userName = jwtUtil.extractUsername(token);
+            try {
+                userName = jwtUtil.extractUsername(token);
+            } catch (Exception e) {
+                // Token is malformed - let it stay null so the filter proceeds without authentication
+            }
         }
 
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -46,6 +50,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
+
+
         filterChain.doFilter(request, response);
     }
 }
