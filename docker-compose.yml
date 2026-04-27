@@ -2,26 +2,35 @@ version: '3.8'
 
 services:
   backend:
-    build: ./backend
-    ports:
-      - "8081:8081"
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    expose:
+      - "8081"
     environment:
       - PORT=8081
-      - SPRING_DATASOURCE_URL=jdbc:h2:mem:edudb
-      - SPRING_H2_CONSOLE_ENABLED=true
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
     networks:
       - edu-network
+    restart: always
 
   frontend:
-    build: ./frontend
-    ports:
-      - "5173:80"
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL}
+    expose:
+      - "80"
     environment:
-      - VITE_API_URL=http://localhost:8081/api
+      - VITE_API_URL=${VITE_API_URL}
     depends_on:
       - backend
     networks:
       - edu-network
+    restart: always
 
 networks:
   edu-network:
