@@ -12,33 +12,45 @@ const Login = ({ onLogin, onOpenPublic, showToast }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [isRecovering, setIsRecovering] = useState(false);
-    const [recoveryStep, setRecoveryStep] = useState('email');
-    const [recoveryEmail, setRecoveryEmail] = useState('');
-    const [recoveryCode, setRecoveryCode] = useState('');
+    const [recoveryStep, setRecoveryStep] = useState('username');
+    const [recoveryUsername, setRecoveryUsername] = useState('');
+    const [otp, setOtp] = useState('');
+    const [newPassword, setNewPassword] = useState('');
 
     const handleSupportAction = (type) => {
-        if (type === 'identity') {
+        if (type === 'forgotPassword') {
             setIsRecovering(true);
-            setRecoveryStep('email');
+            setRecoveryStep('username');
         } else {
             showToast?.('Support request sent! We will help you soon.', 'success');
         }
     };
 
-    const handleRecovery = (e) => {
+    const handleRecovery = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setTimeout(() => {
-            if (recoveryStep === 'email') {
-                setRecoveryStep('code');
-                showToast?.('We sent a code to your email.', 'success');
+        setError('');
+
+        try {
+            if (recoveryStep === 'username') {
+                await authService.forgotPassword(recoveryUsername);
+                setRecoveryStep('otp');
+                showToast?.('OTP sent to your registered phone number', 'success');
+            } else if (recoveryStep === 'otp') {
+                // We'll just move to the password step after entering the code
+                setRecoveryStep('password');
             } else {
+                await authService.resetPassword(recoveryUsername, otp, newPassword);
                 setIsRecovering(false);
-                setUserId('2400033108'); // Updated to reflect your ID
-                showToast?.('Your ID has been recovered!', 'success');
+                setUserId(recoveryUsername);
+                showToast?.('Password reset successfully!', 'success');
             }
+        } catch (err) {
+            setError(err.response?.data || 'Operation failed');
+            showToast?.('Action failed', 'error');
+        } finally {
             setLoading(false);
-        }, 1000);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -204,10 +216,10 @@ const Login = ({ onLogin, onOpenPublic, showToast }) => {
                                         </label>
                                         <button
                                             type="button"
-                                            onClick={() => handleSupportAction('identity')}
+                                            onClick={() => handleSupportAction('forgotPassword')}
                                             className="text-[10px] text-[#3366FF] font-black uppercase tracking-widest hover:underline"
                                         >
-                                            Forgot ID?
+                                            Forgot Password?
                                         </button>
                                     </div>
 
@@ -239,34 +251,51 @@ const Login = ({ onLogin, onOpenPublic, showToast }) => {
                             </>
                         ) : (
                             <form onSubmit={handleRecovery} className="space-y-6">
-                                {recoveryStep === 'email' ? (
+                                {recoveryStep === 'username' ? (
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-slate-900 uppercase tracking-widest ml-1">Your Email</label>
+                                        <label className="text-[10px] font-black text-slate-900 uppercase tracking-widest ml-1">Your ID Number</label>
                                         <div className="relative group">
-                                            <Fingerprint className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#3366FF] transition-colors" size={20} />
+                                            <UserCircle className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#3366FF] transition-colors" size={20} />
                                             <input
-                                                type="email"
-                                                value={recoveryEmail}
-                                                onChange={(e) => setRecoveryEmail(e.target.value)}
+                                                type="text"
+                                                value={recoveryUsername}
+                                                onChange={(e) => setRecoveryUsername(e.target.value)}
                                                 className="w-full pl-12 pr-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-900 transition-all focus:outline-none focus:border-[#3366FF] focus:bg-white focus:ring-4 focus:ring-blue-500/5 placeholder:text-slate-400"
-                                                placeholder="NAME@EXAMPLE.COM"
+                                                placeholder="ENTER YOUR ID"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                ) : recoveryStep === 'otp' ? (
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-slate-900 uppercase tracking-widest ml-1">Enter 6-Digit OTP</label>
+                                        <div className="relative group">
+                                            <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#3366FF] transition-colors" size={20} />
+                                            <input
+                                                type="text"
+                                                value={otp}
+                                                onChange={(e) => setOtp(e.target.value)}
+                                                className="w-full pl-12 pr-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-900 transition-all focus:outline-none focus:border-[#3366FF] focus:bg-white focus:ring-4 focus:ring-blue-500/5 placeholder:text-slate-400"
+                                                placeholder="000000"
                                                 required
                                             />
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-slate-900 uppercase tracking-widest ml-1">Enter Code</label>
-                                        <div className="relative group">
-                                            <Fingerprint className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#3366FF] transition-colors" size={20} />
-                                            <input
-                                                type="text"
-                                                value={recoveryCode}
-                                                onChange={(e) => setRecoveryCode(e.target.value)}
-                                                className="w-full pl-12 pr-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-900 transition-all focus:outline-none focus:border-[#3366FF] focus:bg-white focus:ring-4 focus:ring-blue-500/5 placeholder:text-slate-400"
-                                                placeholder="6-DIGIT CODE"
-                                                required
-                                            />
+                                    <div className="space-y-4">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-900 uppercase tracking-widest ml-1">New Password</label>
+                                            <div className="relative group">
+                                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#3366FF] transition-colors" size={20} />
+                                                <input
+                                                    type="password"
+                                                    value={newPassword}
+                                                    onChange={(e) => setNewPassword(e.target.value)}
+                                                    className="w-full pl-12 pr-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-900 transition-all focus:outline-none focus:border-[#3366FF] focus:bg-white focus:ring-4 focus:ring-blue-500/5 placeholder:text-slate-400"
+                                                    placeholder="••••••••"
+                                                    required
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 )}
@@ -280,7 +309,7 @@ const Login = ({ onLogin, onOpenPublic, showToast }) => {
                                         <Loader2 className="animate-spin" size={20} />
                                     ) : (
                                         <>
-                                            {recoveryStep === 'email' ? 'Send Code' : 'Verify Code'}
+                                            {recoveryStep === 'username' ? 'Send OTP' : recoveryStep === 'otp' ? 'Verify OTP' : 'Update Password'}
                                             <ArrowRight size={18} strokeWidth={3} />
                                         </>
                                     )}

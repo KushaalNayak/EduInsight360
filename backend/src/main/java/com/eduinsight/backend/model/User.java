@@ -16,6 +16,8 @@ public class User {
     private String password;
     
     private String role;
+    
+    private String phoneNumber;
 
     public User() {}
 
@@ -30,4 +32,7 @@ public class User {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 }

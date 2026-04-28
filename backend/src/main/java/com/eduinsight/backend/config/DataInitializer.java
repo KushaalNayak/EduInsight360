@@ -24,6 +24,7 @@ public class DataInitializer {
                     User admin = new User();
                     admin.setUsername("kushaal");
                     admin.setPassword(passwordEncoder.encode("password123"));
+                    admin.setPhoneNumber("+910000000000"); // Placeholder phone number
                     admin.setRole("ADMIN");
                     userRepository.save(admin);
                     System.out.println("✅ Admin user created.");
