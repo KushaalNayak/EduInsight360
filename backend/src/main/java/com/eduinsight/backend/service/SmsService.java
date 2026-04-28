@@ -27,14 +27,26 @@ public class SmsService {
     }
 
     public void sendSms(String to, String body) {
+        // Ensure the number is in international format (E.164)
+        if (!to.startsWith("+")) {
+            to = "+91" + to; 
+        }
+        
         if (accountSid.equals("YOUR_SID")) {
             System.out.println("⚠️ MOCK SMS to " + to + ": " + body);
             return;
         }
-        Message.creator(
-                new PhoneNumber(to),
-                new PhoneNumber(twilioPhoneNumber),
-                body
-        ).create();
+
+        try {
+            Message.creator(
+                    new PhoneNumber(to),
+                    new PhoneNumber(twilioPhoneNumber),
+                    body
+            ).create();
+            System.out.println("✅ SMS sent successfully to " + to);
+        } catch (Exception e) {
+            System.err.println("❌ Twilio Error: " + e.getMessage());
+            // We don't rethrow so the API doesn't crash with a 500 error
+        }
     }
 }

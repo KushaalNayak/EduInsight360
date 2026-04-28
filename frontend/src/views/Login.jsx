@@ -326,11 +326,16 @@ const Login = ({ onLogin, onOpenPublic, showToast }) => {
                         )}
                     </div>
 
-                    <div className="bg-[#F8FAFC] border border-slate-200/60 rounded-2xl p-6 text-center shadow-sm">
+                    <div className="bg-[#F8FAFC] border border-slate-200/60 rounded-2xl p-6 text-center shadow-sm space-y-4">
                         <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest flex items-center justify-center gap-2">
                             <HelpCircle size={14} className="text-[#3366FF]" />
                             Having trouble? <button onClick={() => handleSupportAction('support')} className="text-[#3366FF] font-black hover:underline" type="button">Contact Support</button>
                         </p>
+                        <div className="pt-2 border-t border-slate-200/60">
+                            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">
+                                Don't have an account? <button onClick={() => onOpenPublic?.('register')} className="text-[#3366FF] font-black hover:underline" type="button">Register Now</button>
+                            </p>
+                        </div>
                     </div>
                 </motion.div>
             </div>

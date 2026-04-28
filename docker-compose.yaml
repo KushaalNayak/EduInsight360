@@ -6,8 +6,8 @@ services:
     environment:
       - 'MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-admin123}'
       - MYSQL_DATABASE=edu_insight_360
-    expose:
-      - '3306'
+    ports:
+      - '3306:3306'
     networks:
       - edu-network
     restart: always
@@ -16,8 +16,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    expose:
-      - '8081'
+    ports:
+      - '8081:8081'
     environment:
       - PORT=8081
       - 'SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/edu_insight_360?createDatabaseIfNotExist=true'
@@ -28,6 +28,14 @@ services:
     networks:
       - edu-network
     restart: always
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8082:8080
+    networks:
+      - edu-network
 
 networks:
   edu-network:

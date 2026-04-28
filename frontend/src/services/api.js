@@ -48,8 +48,8 @@ export const authService = {
         const response = await api.post(`/auth/update-phone?username=${username}&phoneNumber=${phoneNumber}`);
         return response.data;
     },
-    register: async (username, password) => {
-        const response = await api.post('/auth/register', { username, password });
+    register: async (username, password, phoneNumber) => {
+        const response = await api.post('/auth/register', { username, password, phoneNumber });
         return response.data;
     },
     logout: () => {

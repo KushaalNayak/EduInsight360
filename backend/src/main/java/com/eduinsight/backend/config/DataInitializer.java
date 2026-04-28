@@ -30,6 +30,17 @@ public class DataInitializer {
                     System.out.println("✅ Admin user created.");
                 }
 
+                // Create a default student user for login
+                if (userRepository.findByUsername("2400033108").isEmpty()) {
+                    User studentUser = new User();
+                    studentUser.setUsername("2400033108");
+                    studentUser.setPassword(passwordEncoder.encode("student123"));
+                    studentUser.setPhoneNumber("+910000000000");
+                    studentUser.setRole("STUDENT");
+                    userRepository.save(studentUser);
+                    System.out.println("✅ Student user created (2400033108).");
+                }
+
                 // Create some default students if table is empty
                 if (studentRepository.count() == 0) {
                     Student s1 = new Student();
@@ -55,16 +66,6 @@ public class DataInitializer {
                     s1.setRecommendations(Arrays.asList("Continue focusing on algorithmic complexity."));
                     
                     studentRepository.save(s1);
-
-                    Student s2 = new Student();
-                    s2.setId("2400033109");
-                    s2.setName("John Doe");
-                    s2.setEmail("john@kluniversity.in");
-                    s2.setGrade("B Tech - 1st year");
-                    s2.setOverallScore(8.5);
-                    s2.setAttendance(88);
-                    s2.setAvatar("https://api.dicebear.com/7.x/avataaars/svg?seed=john");
-                    studentRepository.save(s2);
                     System.out.println("✅ Sample students created.");
                 }
             } catch (Exception e) {

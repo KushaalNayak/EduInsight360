@@ -10,6 +10,7 @@ import Reports from './views/Reports';
 import Settings from './views/Settings';
 import Guidelines from './views/Guidelines';
 import Privacy from './views/Privacy';
+import Register from './views/Register';
 import { AnimatePresence, motion } from 'framer-motion';
 import { mockStudents as initialStudents } from './data/mockData';
 import { studentService, authService } from './services/api';
@@ -158,6 +159,10 @@ const App = () => {
                     ) : publicTab === 'privacy' ? (
                         <motion.div key="privacy" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                             <Privacy onBack={() => setPublicTab(null)} />
+                        </motion.div>
+                    ) : publicTab === 'register' ? (
+                        <motion.div key="register" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                            <Register onBack={() => setPublicTab(null)} showToast={showToast} />
                         </motion.div>
                     ) : (
                         <motion.div key="login" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
