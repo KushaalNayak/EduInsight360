@@ -44,6 +44,10 @@ export const authService = {
         const response = await api.post(`/auth/reset-password?username=${username}&otp=${otp}&newPassword=${newPassword}`);
         return response.data;
     },
+    updatePhone: async (username, phoneNumber) => {
+        const response = await api.post(`/auth/update-phone?username=${username}&phoneNumber=${phoneNumber}`);
+        return response.data;
+    },
     register: async (username, password) => {
         const response = await api.post('/auth/register', { username, password });
         return response.data;

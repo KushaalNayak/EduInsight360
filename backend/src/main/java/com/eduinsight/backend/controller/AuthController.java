@@ -113,4 +113,15 @@ public class AuthController {
                 })
                 .orElse(ResponseEntity.status(404).body("User not found"));
     }
+
+    @PostMapping("/update-phone")
+    public ResponseEntity<?> updatePhone(@RequestParam String username, @RequestParam String phoneNumber) {
+        return userRepository.findByUsername(username)
+                .map(user -> {
+                    user.setPhoneNumber(phoneNumber);
+                    userRepository.save(user);
+                    return ResponseEntity.ok("Phone number updated successfully");
+                })
+                .orElse(ResponseEntity.status(404).body("User not found"));
+    }
 }

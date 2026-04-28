@@ -1,9 +1,12 @@
     import React, { useState, useRef, useEffect } from 'react';
-import { Search, Bell, Mail, User, LogOut, ChevronDown, SearchCheck } from 'lucide-react';
+import { Search, Bell, Mail, User, LogOut, ChevronDown, SearchCheck, Phone } from 'lucide-react';
+import { authService } from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = ({ user, onLogout, onSettings, showToast }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber || '');
+    const [isUpdating, setIsUpdating] = useState(false);
     const dropdownRef = useRef(null);
 
     useEffect(() => {
@@ -22,6 +25,22 @@ const Navbar = ({ user, onLogout, onSettings, showToast }) => {
 
     const handleNotificationClick = (type) => {
         showToast?.(`Opening ${type}...`, 'info');
+    };
+
+    const handleUpdatePhone = async () => {
+        if (!phoneNumber) {
+            showToast?.('Please enter a phone number', 'error');
+            return;
+        }
+        setIsUpdating(true);
+        try {
+            await authService.updatePhone(user.id, phoneNumber);
+            showToast?.('Phone number updated!', 'success');
+        } catch (err) {
+            showToast?.('Update failed', 'error');
+        } finally {
+            setIsUpdating(false);
+        }
     };
 
     return (
@@ -107,8 +126,31 @@ const Navbar = ({ user, onLogout, onSettings, showToast }) => {
                                         className="w-full flex items-center gap-4 px-5 py-3.5 text-[11px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 hover:text-[#3366FF] rounded-2xl transition-all group"
                                     >
                                         <User size={18} strokeWidth={2.5} className="text-slate-400 group-hover:text-[#3366FF]" />
-                                        Profile
+                                        Profile Settings
                                     </button>
+
+                                    <div className="px-5 py-4 space-y-3">
+                                        <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Link Phone (for OTP)</label>
+                                        <div className="flex gap-2">
+                                            <div className="relative flex-1">
+                                                <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                                <input
+                                                    type="text"
+                                                    value={phoneNumber}
+                                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                                    placeholder="+91..."
+                                                    className="w-full pl-9 pr-3 py-2.5 bg-slate-100 border-none rounded-xl text-[11px] font-bold text-slate-900 focus:ring-2 focus:ring-[#3366FF]/20 outline-none"
+                                                />
+                                            </div>
+                                            <button
+                                                onClick={handleUpdatePhone}
+                                                disabled={isUpdating}
+                                                className="bg-[#3366FF] text-white px-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#2952CC] transition-all disabled:opacity-50"
+                                            >
+                                                {isUpdating ? '...' : 'Save'}
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="my-3 border-t border-slate-100 mx-3"></div>
                                 <button
