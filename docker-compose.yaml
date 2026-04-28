@@ -2,45 +2,29 @@ version: '3.8'
 
 services:
   db:
-    image: mysql:8
+    image: 'mysql:8'
     environment:
-      - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-admin123}
+      - 'MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-admin123}'
       - MYSQL_DATABASE=edu_insight_360
     expose:
-      - "3306"
+      - '3306'
     networks:
       - edu-network
     restart: always
 
   backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile
     expose:
-      - "8081"
+      - '8081'
     environment:
       - PORT=8081
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/edu_insight_360?createDatabaseIfNotExist=true
+      - 'SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/edu_insight_360?createDatabaseIfNotExist=true'
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-admin123}
+      - 'SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-admin123}'
     depends_on:
       - db
-    networks:
-      - edu-network
-    restart: always
-
-  frontend:
-    build: 
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        - VITE_API_URL=${VITE_API_URL}
-    expose:
-      - "80"
-    environment:
-      - VITE_API_URL=${VITE_API_URL}
-    depends_on:
-      - backend
     networks:
       - edu-network
     restart: always
